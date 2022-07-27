@@ -1,0 +1,113 @@
+﻿@page "/warehouse/create"
+@page "/warehouse/edit/{warehouseId}"
+@using BlazorStrap.Extensions.FluentValidation
+@using WarehouseMgmt.Client.ViewModels
+
+@if (LoadingData)
+{
+    <div style="display:flex; justify-content:center;">
+        <BSSpinner/>
+    </div>
+}
+else
+{
+    @if(CurrentViewMode == ViewMode.Edit)
+    {
+        <PageTitle>Edit @WarehouseViewModel.Name</PageTitle>
+    }
+    else
+    {
+        <PageTitle>Create Warehouse</PageTitle>
+    }
+
+    <BSContainer style="max-width: 50rem;">
+        <BSForm class="card" Model=@WarehouseViewModel OnValidSubmit="SubmitWarehouse">
+            <FluentValidator TValidator="WarehouseValidator" />
+            <BSCard CardType="CardType.Body">
+                <BSRow>
+                    <BSCol>
+                        @if(CurrentViewMode == ViewMode.Add)
+                        {
+                            <BSCard Class="text-center" CardType="CardType.Title">Create New Warehouse</BSCard>
+                        }
+                        else
+                        {
+                            <BSCard Class="text-center" CardType="CardType.Title">Edit Warehouse</BSCard>
+                        }
+                    </BSCol>
+                    @if(CurrentViewMode == ViewMode.Edit)
+                    {
+                        <BSCol Class="col-auto">
+                            <BSButton class="btn btn-icon" Color="BSColor.Light" @onclick="(() => OpenDeleteWarehouseModal())"><i class="fa-solid fa-trash-can"></i></BSButton>
+                        </BSCol>
+                    }
+                    
+                </BSRow>
+                <hr/>
+                @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+                {
+                    <BSAlert Color="BSColor.Danger" HasIcon="true">
+                        @ErrorMessage
+                    </BSAlert>
+                }
+                <BSRow>
+                    <BSCol>
+                        <div class="mb-3">
+                            <BSLabel>Warehouse</BSLabel>
+                            <BSInput InputType="InputType.Text" placeholder="Enter Warehouse Name" @bind-Value="@WarehouseViewModel.Name" />
+                            <BSFeedback For="@(() => WarehouseViewModel.Name)"/>
+                        </div>
+                        <div class="mb-3">
+                            <BSLabel>Street Address</BSLabel>
+                            <BSInput InputType="InputType.Text" placeholder="Enter Street Address" @bind-Value="@WarehouseViewModel.StreetAddress" />
+                            <BSFeedback For="@(() => WarehouseViewModel.StreetAddress)"/>
+                        </div>
+                        <BSRow>
+                            <BSCol ColumnSmall="12" ColumnMedium="6" ColumnLarge="5"> 
+                                <div class="mb-3">
+                                    <BSLabel>City</BSLabel>
+                                    <BSInput InputType="InputType.Text" placeholder="Enter City" @bind-Value="@WarehouseViewModel.City" />
+                                    <BSFeedback For="@(() => WarehouseViewModel.City)"/>
+                                </div>
+                            </BSCol>
+                            <BSCol ColumnSmall="12" ColumnMedium="6" ColumnLarge="4">
+                                <div class="mb-3">
+                                    <BSLabel>State</BSLabel>
+                                    <BSInput InputType="InputType.Text" placeholder="Enter State" @bind-Value="@WarehouseViewModel.State" />
+                                    <BSFeedback For="@(() => WarehouseViewModel.State)"/>
+                                </div>
+                            </BSCol>
+                            <BSCol ColumnSmall="12" ColumnMedium="6" ColumnLarge="3">
+                                <div class="mb-3">
+                                    <BSLabel>Zip Code</BSLabel>
+                                    <BSInput InputType="InputType.Text" placeholder="Enter Zip Code" @bind-Value="@WarehouseViewModel.ZipCode" />
+                                    <BSFeedback For="@(() => WarehouseViewModel.ZipCode)"/>
+                                </div>
+                            </BSCol>
+                            <BSCol ColumnSmall="12" ColumnMedium="6" ColumnLarge="12">
+                                <div class="mb-3">
+                                    <BSLabel>Country</BSLabel>
+                                    <BSInput InputType="InputType.Text" placeholder="Enter Country" @bind-Value="@WarehouseViewModel.Country" />
+                                    <BSFeedback For="@(() => WarehouseViewModel.Country)"/>
+                                </div>
+                            </BSCol>
+                        </BSRow>
+                    </BSCol>
+                </BSRow>
+                <div class="d-flex align-items-center">
+                    <BSButton class="mt-2" Color="BSColor.Secondary" IsOutlined="true" OnClick="GoBackToWarehousesPage" ><i class="fa-solid fa-chevron-left me-2"></i>Back</BSButton>
+                    @if(CurrentViewMode == ViewMode.Add)
+                    {
+                        <BSButton class="ms-auto mt-2" IsSubmit="true" Color="BSColor.Primary"><i class="fa-solid fa-plus me-2"></i>Create New Warehouse</BSButton>
+                    }
+                    else
+                    {
+                        <BSButton class="ms-auto mt-2" IsSubmit="true" Color="BSColor.Primary"><i class="fa-solid fa-check me-2"></i>Update Warehouse</BSButton>
+                    }
+                </div>
+            </BSCard>
+        </BSForm>
+    </BSContainer>
+}
+
+<WarehouseMgmt.Client.Components.Modals.DeleteWarehouseModal @ref="DeleteWarehouseModal" OnDelete="DeleteWarehouse" />

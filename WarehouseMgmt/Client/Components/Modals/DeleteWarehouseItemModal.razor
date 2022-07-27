@@ -1,0 +1,16 @@
+﻿<BSModal @ref="Modal">
+    <Header>Delete Warehouse?</Header>
+    <Content>Are you sure you really want to delete this warehouse item? This cannot be undone.</Content>
+    <Footer Context="modal">
+        <div class="w-100">
+            <div class="row">
+                <div class="col">
+                    <BSButton class="w-100" Color="BSColor.Default" @onclick="Hide">Cancel</BSButton>
+                </div>
+                <div class="col">
+                    <BSButton class="w-100" Color="BSColor.Danger" @onclick="Delete">Delete</BSButton>
+                </div>
+            </div>
+          </div>
+    </Footer>
+</BSModal>

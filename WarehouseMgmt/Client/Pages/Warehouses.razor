@@ -1,0 +1,70 @@
+﻿@page "/manageWarehouses/"
+<PageTitle>Manage Warehouses</PageTitle>
+
+<BSContainer>
+    <BSRow>
+        <BSCol>
+            <h3 class="mb-3">Warehouses</h3>
+        </BSCol>
+        <BSCol Class="col-auto">
+            <BSButton Color="BSColor.Dark" IsOutlined="true" OnClick="AddNewWarehouse"><i class="fa-solid fa-plus"></i></BSButton>
+        </BSCol>
+        <hr/>
+    </BSRow>
+
+    @if(!LoadingData)
+    {
+        @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+        {
+            <BSAlert Color="BSColor.Danger" HasIcon="true">
+                @ErrorMessage
+            </BSAlert>
+        }
+
+        if(WarehouseDtos?.Count > 0)
+        {
+            <BSListGroup>
+                @foreach(var warehouse in WarehouseDtos)
+                {
+                    <BSCard CardType="CardType.Card" Class="mb-3">
+                        <BSCard CardType="CardType.Body">
+                            <BSRow>
+                                <BSCol>
+                                    <BSRow>
+                                        <BSCol>
+                                            <h4 style="margin:unset;">@warehouse.Name</h4>
+                                        </BSCol>
+                                        <BSCol Class="col-auto">
+                                            <BSButton Color="BSColor.Info" IsOutlined="true" @onclick="(() => ViewWarehouse(warehouse.Id))"><i class="fa-solid fa-eye"></i></BSButton>
+                                            <BSButton Color="BSColor.Dark" IsOutlined="true" @onclick="(() => EditWarehouse(warehouse.Id))"><i class="fa-solid fa-pencil"></i></BSButton>
+                                            <BSButton Color="BSColor.Danger" IsOutlined="true" @onclick="(() => OpenDeleteWarehouseModal(warehouse.Id))"><i class="fa-solid fa-x"></i></BSButton>
+                                        </BSCol>
+                                    </BSRow>
+                                    <hr/>
+                                    <div class="text-muted">
+                                        @warehouse.StreetAddress
+                                    </div>
+                                    <div class="text-muted">
+                                        @warehouse.City, @warehouse.State @warehouse.ZipCode @warehouse.Country
+                                    </div>
+                                </BSCol>
+                            </BSRow>
+                        </BSCard>
+                    </BSCard>
+                }
+            </BSListGroup>
+        }
+        else
+        {
+            <p>No Warehouses Found!</p>
+        }
+    }
+    else
+    {
+        <div style="display:flex; justify-content:center;">
+            <BSSpinner/>
+        </div>
+    }
+</BSContainer>
+
+<WarehouseMgmt.Client.Components.Modals.DeleteWarehouseModal @ref="DeleteWarehouseModal" OnDelete="DeleteWarehouse" />

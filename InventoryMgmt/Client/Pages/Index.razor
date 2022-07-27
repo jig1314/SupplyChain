@@ -1,0 +1,58 @@
+﻿@page "/"
+@page "/warehouses/"
+
+<PageTitle>Warehouses</PageTitle>
+@if (LoadingData)
+{
+    <div style="display:flex; justify-content:center;">
+        <BSSpinner/>
+    </div>
+}
+else
+{
+    <BSContainer>
+        <BSRow>
+            <h1>Choose a warehouse to view Inventory</h1>
+            <hr/>
+        
+            @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+            {
+                <BSAlert Color="BSColor.Danger" HasIcon="true">
+                    @ErrorMessage
+                </BSAlert>
+            }
+            @if(WarehouseDtos?.Count > 0)
+            {
+                foreach(var warehouse in WarehouseDtos)
+                {
+                    <BSCol class="col-auto mb-5">
+                        <BSCard CardType="CardType.Card" style="min-width: 20rem;">
+                            <BSRow class="p-1">
+                                <BSCol>
+                                    <div class="text-center card-box">
+                                        <div class="thumb-lg member-thumb mx-auto pt-2 pb-2" style="width: 90px; height: 90px;">
+                                            <img src="user-icon-256.png" class="rounded-circle img-thumbnail">
+                                        </div>
+                                    </div>
+                                </BSCol>
+                            </BSRow>
+                            <BSCard CardType="CardType.Body">
+                                <h5><a href="warehouse/@warehouse.Id">@warehouse.Name</a></h5>
+                                <div class="text-muted">
+                                    @warehouse.StreetAddress
+                                </div>
+                                <div class="text-muted">
+                                    @warehouse.City, @warehouse.State @warehouse.ZipCode @warehouse.Country
+                                </div>
+                            </BSCard>
+                        </BSCard>
+                    </BSCol>
+                }
+            }
+            else
+            {
+                <p style="margin-left: 15px;">No warehouses found.</p>
+            }
+        </BSRow>
+    </BSContainer>
+}

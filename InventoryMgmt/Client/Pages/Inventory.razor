@@ -1,0 +1,57 @@
+﻿@page "/warehouse/{warehouseId}"
+
+<PageTitle>Inventory</PageTitle>
+@if (LoadingData)
+{
+    <div style="display:flex; justify-content:center;">
+        <BSSpinner/>
+    </div>
+}
+else
+{
+    <BSContainer>
+        <BSRow>
+            <h1>@Warehouse.Name Inventory</h1>
+            <hr/>
+        
+            @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+            {
+                <BSAlert Color="BSColor.Danger" HasIcon="true">
+                    @ErrorMessage
+                </BSAlert>
+            }
+            @if(InventoryDtos?.Count > 0)
+            {
+                <BSTable IsResponsive="true" IsStriped="true">
+                    <BSTHead>
+                        <BSTR>
+                            <BSTD>Part Number</BSTD>
+                            <BSTD>Part Description</BSTD>
+                            <BSTD>Quantity</BSTD>
+                        </BSTR>
+                    </BSTHead>
+                    <BSTBody>
+                        @foreach(var inventory in InventoryDtos)
+                        {
+                            <BSTR>
+                                <BSTD>@inventory.PartNumber</BSTD>
+                                <BSTD>@inventory.Description</BSTD>
+                                <BSTD>@inventory.Qty</BSTD>
+                            </BSTR>
+                        }
+                    </BSTBody>
+                </BSTable>
+            }
+            else
+            {
+                <p style="margin-left: 15px;">No inventory found.</p>
+            }
+            <hr/>
+            <BSRow>
+                <BSCol class="col-auto p-0">
+                    <BSButton Color="BSColor.Secondary" IsOutlined="true" OnClick="GoBackToWarehousesPage" ><i class="fa-solid fa-chevron-left me-2"></i>Back</BSButton>
+                </BSCol>
+            </BSRow>
+        </BSRow>
+    </BSContainer>
+}

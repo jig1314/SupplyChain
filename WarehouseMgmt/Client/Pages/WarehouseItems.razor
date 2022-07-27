@@ -1,0 +1,100 @@
+﻿@page "/warehouse/{warehouseId}"
+@using WarehouseMgmt.Client.Components.Modals
+
+@if (LoadingData)
+{
+    <div style="display:flex; justify-content:center;">
+        <BSSpinner/>
+    </div>
+}
+else
+{
+    <BSContainer>
+        <BSRow>
+            <BSCol>
+                <h3 class="mb-3">@WarehouseViewModel.Name Items</h3>
+            </BSCol>
+            <BSCol Class="col-auto">
+                <BSButton Color="BSColor.Dark" IsOutlined="true" OnClick="AddNewWarehouseItem"><i class="fa-solid fa-box-open me-2"></i>Receive Items</BSButton>
+            </BSCol>
+            <BSCol Class="col-auto">
+                <BSButton Color="BSColor.Dark" IsDisabled="@(SelectedItemIds?.Count == 0)" OnClick="OpenShipItemModal"><i class="fa-solid fa-truck-arrow-right me-2"></i>Ship Selected Items</BSButton>
+            </BSCol>
+            <hr/>
+        </BSRow>
+        @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+        {
+            <BSAlert Color="BSColor.Danger" HasIcon="true">
+                @ErrorMessage
+            </BSAlert>
+        }
+        <BSRow>
+            @if(WarehouseItemDtos?.Count > 0)
+            {
+                @foreach(var partsByStorageLocation in WarehouseItemDtos.Select(i => i.StorageLocation).Distinct().ToDictionary(s => s, s => WarehouseItemDtos.Where(i => i.StorageLocation == s)))
+                {
+                    <h4>@partsByStorageLocation.Key</h4>
+                    <hr/>
+                    foreach (var warehouseItem in partsByStorageLocation.Value)
+                    {
+                        <BSCol class="col-auto mb-5">
+                            <BSCard CardType="CardType.Card" style="min-width: 20rem;">
+                                <BSRow class="p-1">
+                                    <div class="col-auto form-check ms-4 mt-1">
+                                        <BSInputCheckbox CheckedValue="true" T="bool" ValueChanged="((isChecked) => SelectedItemsChanged(warehouseItem.Id, isChecked))" Value="SelectedItemIds.Contains(warehouseItem.Id)" />
+                                    </div>
+                                    <BSCol>
+                                        <div class="text-center card-box">
+                                            <div class="thumb-lg member-thumb mx-auto pt-2 pb-2" style="width: 90px; height: 90px;">
+                                                <img src="user-icon-256.png" class="rounded-circle img-thumbnail">
+                                            </div>
+                                        </div>
+                                    </BSCol>
+                                    <BSCol class="col-auto">
+                                        <i class="fa-solid fa-pencil pt-2" style="font-size: 1.3rem; cursor:pointer;" @onclick="(() => EditWarehouseItem(warehouseItem.Id))"></i>
+                                    </BSCol>
+                                    <BSCol class="col-auto">
+                                        <i class="fa-solid fa-trash-can pt-2 pe-2" style="font-size: 1.3rem; cursor:pointer;" @onclick="(() => OpenDeleteWarehouseItemModal(warehouseItem.Id))"></i>
+                                    </BSCol>
+                                </BSRow>
+                                <BSCard CardType="CardType.Body">
+                                    <h5>@warehouseItem.Description</h5>
+                                    @if (string.IsNullOrWhiteSpace(warehouseItem.SerialNumber))
+                                    {
+                                        <p class="text-muted" style="margin-bottom: unset;">Part Number: @warehouseItem.PartNumber</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-muted" style="margin-bottom: unset;">Part Number: @warehouseItem.PartNumber (@warehouseItem.SerialNumber)</p>
+                                    }
+                                    <p class="text-muted" style="margin-bottom: unset;">Quantity: @warehouseItem.Qty</p>
+                                </BSCard>
+                            </BSCard>
+                        </BSCol>
+                    }
+                }
+                <hr/>
+                <BSRow>
+                    <BSCol class="col-auto p-0">
+                        <BSButton Color="BSColor.Secondary" IsOutlined="true" OnClick="GoBackToWarehousesPage" ><i class="fa-solid fa-chevron-left me-2"></i>Back</BSButton>
+                    </BSCol>
+                    <BSCol Class="col-auto ms-auto p-0">
+                        <BSButton Color="BSColor.Dark" IsDisabled="@(SelectedItemIds?.Count == 0)" OnClick="OpenShipItemModal"><i class="fa-solid fa-truck-arrow-right me-2"></i>Ship Selected Items</BSButton>
+                    </BSCol>
+                </BSRow>
+            }
+            else
+            {
+                <p style="margin-left: 15px;">No results found.</p>
+                <hr/>
+                <BSRow>
+                    <BSCol class="col-auto p-0">
+                        <BSButton Color="BSColor.Secondary" IsOutlined="true" OnClick="GoBackToWarehousesPage" ><i class="fa-solid fa-chevron-left me-2"></i>Back</BSButton>
+                    </BSCol>
+                </BSRow>
+            }
+        </BSRow>
+    </BSContainer>
+}
+<DeleteWarehouseItemModal @ref="DeleteWarehouseItemModal" OnDelete="DeleteWarehouseItem" />
+<ShipItemsModal @ref="ShipItemsModal" OnShipItems="OnItemsShipped" />

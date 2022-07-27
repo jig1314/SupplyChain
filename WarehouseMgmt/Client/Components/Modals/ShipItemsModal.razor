@@ -1,0 +1,47 @@
+﻿@using BlazorStrap.Extensions.FluentValidation
+@using WarehouseMgmt.Client.ViewModels
+<BSModal Size="Size.Medium" IsCentered="true" @ref="Modal">
+    <BSForm Model="@ShipItemViewModel" OnValidSubmit="ShipItems">
+        <FluentValidator TValidator="ShipItemValidator" />
+        <BSModalHeader>Ship Item(s)</BSModalHeader>
+        <BSModalContent>
+            @if (LoadingData)
+            {
+                <div style="display:flex; justify-content:center;">
+                    <BSSpinner/>
+                </div>
+            }
+            else
+            {
+                @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+                {
+                    <BSAlert Color="BSColor.Danger" HasIcon="true">
+                        @ErrorMessage
+                    </BSAlert>
+                }
+                <BSRow>
+                    <BSCol>
+                        <div class="mb-3">
+                            <BSLabel>Ship To Warehouse</BSLabel>
+                            <BSInput InputType="InputType.Select" @bind-Value="@ShipItemViewModel.IdWarehouse">
+                                <option value="null">Please select a Warehouse...</option>
+                                @if(Warehouses?.Count > 0)
+                                {
+                                    @foreach(var warehouse in Warehouses)
+                                    {
+                                        <option value="@warehouse.Id">@warehouse.Name</option>
+                                    }
+                                }
+                            </BSInput>
+                            <BSFeedback For="@(() => ShipItemViewModel.IdWarehouse)"/>
+                        </div>
+                    </BSCol>
+                </BSRow>
+            }
+        </BSModalContent>
+        <BSModalFooter>
+            <BSButton Color="BSColor.Secondary" @onclick="Hide">Cancel</BSButton>
+            <BSButton IsSubmit="true" Color="BSColor.Primary">Ship Items</BSButton>
+        </BSModalFooter>
+    </BSForm>
+</BSModal>

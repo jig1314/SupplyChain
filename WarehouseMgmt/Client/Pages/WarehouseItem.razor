@@ -1,0 +1,103 @@
+﻿@page "/warehouse/receive/{warehouseId}"
+@page "/warehouseItem/edit/{warehouseItemId}"
+@using BlazorStrap.Extensions.FluentValidation
+@using WarehouseMgmt.Client.ViewModels
+
+@if (LoadingData)
+{
+    <div style="display:flex; justify-content:center;">
+        <BSSpinner/>
+    </div>
+}
+else
+{
+    @if(CurrentViewMode == ViewMode.Add)
+    {
+        <PageTitle>Receive Items</PageTitle>
+    }
+    else
+    {
+        <PageTitle>Edit Warehouse Item</PageTitle>
+    }
+    <BSContainer style="max-width: 30rem;">
+        <BSForm class="card" Model=@WarehouseItemViewModel OnValidSubmit="SubmitWarehouseItem">
+            <FluentValidator TValidator="WarehouseItemValidator" />
+            <BSCard CardType="CardType.Body">
+                <BSRow>
+                    <BSCol>
+                        @if(CurrentViewMode == ViewMode.Add)
+                        {
+                            <BSCard Class="text-center" CardType="CardType.Title">Receive New Item</BSCard>
+                        }
+                        else
+                        {
+                            <BSCard Class="text-center" CardType="CardType.Title">Edit Warehouse Item</BSCard>
+                        }
+                    </BSCol>
+                    @if(CurrentViewMode == ViewMode.Edit)
+                    {
+                        <BSCol Class="col-auto">
+                            <BSButton class="btn btn-icon" Color="BSColor.Light" @onclick="(() => OpenDeleteWarehouseItemModal())"><i class="fa-solid fa-trash-can"></i></BSButton>
+                        </BSCol>
+                    }
+                </BSRow>
+                <hr/>
+                @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+                {
+                    <BSAlert Color="BSColor.Danger" HasIcon="true">
+                        @ErrorMessage
+                    </BSAlert>
+                }
+                <BSRow>
+                    <BSCol>
+                        <div class="mb-3">
+                            <BSLabel>Warehouse</BSLabel>
+                            <BSInput InputType="InputType.Text" IsDisabled="true" @bind-Value="@WarehouseItemViewModel.WarehouseName" />
+                        </div>
+                        <div class="mb-3">
+                            <BSLabel>Storage Location</BSLabel>
+                            <BSInput InputType="InputType.Text" placeholder="Enter Storage Location" @bind-Value="@WarehouseItemViewModel.StorageLocation" />
+                            <BSFeedback For="@(() => WarehouseItemViewModel.StorageLocation)"/>
+                        </div>
+                        <div class="mb-3">
+                            <BSLabel>Part Number</BSLabel>
+                            <BSInput InputType="InputType.Text" placeholder="Enter Part Number" @bind-Value="@WarehouseItemViewModel.PartNumber" />
+                            <BSFeedback For="@(() => WarehouseItemViewModel.PartNumber)"/>
+                        </div>
+                        <div class="mb-3">
+                            <BSLabel>Description</BSLabel>
+                            <BSInput InputType="InputType.TextArea" placeholder="Enter Description" @bind-Value="@WarehouseItemViewModel.Description" />
+                            <BSFeedback For="@(() => WarehouseItemViewModel.Description)"/>
+                        </div>
+                        <div class="mb-3">
+                            <BSLabel>Serial Number</BSLabel>
+                            <BSInput InputType="InputType.Text" IsDisabled="@(!WarehouseItemViewModel.HasSerialNumber)" placeholder="Enter Serial Number" @bind-Value="@WarehouseItemViewModel.SerialNumber" />
+                            <BSFeedback For="@(() => WarehouseItemViewModel.SerialNumber)"/>
+                        </div>
+                        <div class="@BS.Form_Check @BS.Form_Switch mb-3">
+                            <BSInputCheckbox CheckedValue="true" T="bool" Value="WarehouseItemViewModel.HasSerialNumber" ValueExpression="(() => WarehouseItemViewModel.HasSerialNumber)" ValueChanged="((hasSerialNumber) => HasSerialNumberChanged(hasSerialNumber))"/>
+                            <BSLabel>Has Serial Number?</BSLabel>
+                        </div>
+                        <div class="mb-3">
+                            <BSLabel>Quantity</BSLabel>
+                            <BSInput InputType="InputType.Text" IsDisabled="@(WarehouseItemViewModel.HasSerialNumber)" placeholder="Enter Quantity" @bind-Value="@WarehouseItemViewModel.Qty" />
+                            <BSFeedback For="@(() => WarehouseItemViewModel.Qty)"/>
+                        </div>
+                    </BSCol>
+                </BSRow>
+                <div class="d-flex align-items-center">
+                    <BSButton class="mt-2" Color="BSColor.Secondary" IsOutlined="true" OnClick="GoBackToWarehousePage" ><i class="fa-solid fa-chevron-left me-2"></i>Back</BSButton>
+                    @if(CurrentViewMode == ViewMode.Add)
+                    {
+                        <BSButton class="ms-auto mt-2" IsSubmit="true" Color="BSColor.Primary"><i class="fa-solid fa-plus me-2"></i>Receive Item</BSButton>
+                    }
+                    else
+                    {
+                        <BSButton class="ms-auto mt-2" IsSubmit="true" Color="BSColor.Primary"><i class="fa-solid fa-check me-2"></i>Update Warehouse Item</BSButton>
+                    }
+                </div>
+            </BSCard>
+        </BSForm>
+    </BSContainer>
+}
+<WarehouseMgmt.Client.Components.Modals.DeleteWarehouseItemModal @ref="DeleteWarehouseItemModal" OnDelete="DeleteWarehouseItem" />
