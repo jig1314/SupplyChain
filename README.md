@@ -25,6 +25,7 @@ The consequences of using this pattern are:
 
 Using this architecture design pattern requires solving problems like the following:
 * How to partition the system into microservices?
+* How to ensure the services are independent?
 * How to ensure data consistency between services?
 
 The supply chain management application solves these problems by implementing the patterns described below.
@@ -46,18 +47,27 @@ The consequences of this pattern are:
 * Managing the organizational structure of the development teams corresponding to their subdomains.
 
 ### Database per service
-
+To answer the issue of service independence, the decision was made to use the Database per service design pattern. This means each service can control access to the data it needs and its transactions only involve its database. The service's database can't be accessed directly by any other service and its data is only accessible via an API the service exposes (Microservices pattern: Database per service). See diagram  below:
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/10623036/181138083-38d61e1c-718c-4303-a8ed-1c5390df2ddc.png">
 </p>
+
+The benefits of this pattern are:
+* Ensure that services are loosely coupled.
+* Each service can use the type of database it needs. (maximizes flexibility)
+
+The consequences of this pattern are:
+* Implementing queries that join data that is now in multiple databases is challenging.
+* Database management is more complex.
+* Implementing transactions that span multiple services is much harder. (The next pattern address this concern)
 
 ### Saga pattern (Choreography-based)
 <p align="center">
   <img src="https://user-images.githubusercontent.com/10623036/181138089-bfb35c8f-24c4-4bf0-aced-162f422f2b97.png">
 </p>
 
-### Transactional outbox pattern
+#### Transactional outbox pattern
 <p align="center">
   <img src="https://user-images.githubusercontent.com/10623036/181138104-a9cf264e-7f3a-47c0-abdb-949e9f20183c.png">
 </p>
