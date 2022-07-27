@@ -93,18 +93,25 @@ The Supply Chain Management Application was implemented using each of the design
 These applications are Blazor Webassmbly web applications that are composed of the following components:
 * A standalone frontend that is a Single Page (SPA) Progressive Web Application (PWA)
 * A backend web services that handles the app's database transactions and serves the frontend application to the browser
+* Each backend web service has it's own relational database. 
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/10623036/181141998-c5633d74-2bac-4cda-919a-eceb32dfa086.png">
 </p>
 
-Each backend web service has it's own relational database.  
 The warehouse management application allows its users to create and manage warehouses and receive and ship items. When the users perform these transactions, the web service publishes messages to a table in it's database that serves as an outbox table. The message is then published to a message broker. The inventory management web service is subscibed to receive the messages published by the warehouse management system. The inventory service updates its inventory tables to reflect the current state of the warehouse. The users can use the inventory management application to view reports of the warehouse inventory.
+
 An Azure Service Bus was used as the message broker. (https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-messaging-overview) Also, both webservices use a .NET library called CAP to help handle the message bus communication. (https://cap.dotnetcore.xyz/)
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/10623036/181141999-2c7add2c-034f-42c8-8575-95bffc8a983d.png">
 </p>
+
+#### Example: Warehouse Management (publish message when warehouse is created)
+![Warehouse Management](https://user-images.githubusercontent.com/10623036/181150912-7a51e716-a17e-4c56-8d5d-bcb66792ce11.png)
+
+#### Example: Inventory Management (updates database after receiving message that a new warehouse was created)
+![Inventory Management](https://user-images.githubusercontent.com/10623036/181150933-b023dfcd-15de-46e0-a373-e99280c8e083.png)
 
 ## Work Citied
 Microservices pattern: Database per service. microservices.io. (n.d.). Retrieved July 23, 2022, from https://microservices.io/patterns/data/database-per-service.html
