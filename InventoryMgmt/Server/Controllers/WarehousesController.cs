@@ -125,6 +125,11 @@ namespace InventoryMgmt.Server.Controllers
             }
         }
 
+        /// <summary> A new warehouse was created. Need to add warehouse to database.
+        /// </summary>
+        /// <param name="warehouse"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         [NonAction]
         [CapSubscribe("onWarehouseCreated")]
         public async Task PostWarehouse(Warehouse warehouse)
@@ -145,6 +150,7 @@ namespace InventoryMgmt.Server.Controllers
                 Country = warehouse.Country
             };
 
+            // Insert new warehouse to database.
             _context.Warehouses.Add(newWarehouse);
             await _context.SaveChangesAsync();
         }

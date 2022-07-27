@@ -132,13 +132,17 @@ namespace WarehouseMgmt.Server.Controllers
             }
         }
 
-        // POST: api/Warehouses
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary> POST: api/Warehouses
+        /// Create a new warehouse. 
+        /// </summary>
+        /// <param name="warehouseDto"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<WarehouseDto>> PostWarehouse(WarehouseDto warehouseDto)
         {
             try
             {
+                // Database Transaction wrapper will rollback all updates if failure occurs.
                 using (var trans = _context.Database.BeginTransaction(_capBus, autoCommit: true))
                 {
                     if (_context.Warehouses == null)
@@ -146,22 +150,27 @@ namespace WarehouseMgmt.Server.Controllers
                         return Problem("Entity set 'ApplicationDbContext.Warehouses'  is null.");
                     }
 
+                    // Add new warehouse to the database
                     var warehouse = _mapper.Map<Warehouse>(warehouseDto);
                     _context.Warehouses.Add(warehouse);
                     await _context.SaveChangesAsync();
 
+                    // Headers for update message
                     Dictionary<string, string?> extraHeaders = new()
                     {
                         { AzureServiceBusHeaders.SessionId, "warehouse-mgmt" }
                     };
 
+                    // Publish message to the database and message broker
                     _capBus.Publish("onWarehouseCreated", warehouse, extraHeaders);
 
+                    // Return new resource to the client
                     return CreatedAtAction("GetWarehouse", new { id = warehouse.Id }, warehouse);
                 }
             }
             catch (Exception ex)
             {
+                // Return error to the client
                 return StatusCode(StatusCodes.Status500InternalServerError, (ex.InnerException != null) ? ex.InnerException.Message : ex.Message);
             }
         }

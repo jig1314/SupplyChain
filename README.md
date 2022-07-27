@@ -1,5 +1,5 @@
 # Supply Chain Management Application
-This application is a demo to showcase design patterns related to microservice architecture for a term project for SWE 6853 (Summer 2022). This repository contains two web applications:  
+This application is a demo to highlight design patterns related to microservice architecture for a term project for SWE 6853 (Summer 2022). This repository contains two web applications:  
   1. A warehouse management application that allows its users to create and manage warehouses and receive and ship items. (https://warehouse-mgmt.azurewebsites.net/)
   2. A inventory management application that allows its users to view inventory in the warehouses. (https://inventory-mgr.azurewebsites.net/)
 
@@ -8,7 +8,7 @@ Source code: https://github.com/jig1314/SupplyChain
 See more information about the design patterns utilized to implement this application below.
 
 ## Microservice Architecture Design Patterns
-The microservice architecture is an architecutre that builds an application by breaking it down into a set of loosely coupled services (Microservices Pattern: Microservice architecture pattern). Each service can function independently and handles its own responsiblilities. See diagram below:
+The microservice architecture is an architecture that builds an application by breaking it down into a set of loosely coupled services (Microservices Pattern: Microservice architecture pattern). Each service can function independently and handles its own responsibilities. See diagram below:
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/10623036/181138047-1a22ba83-ab59-47b6-bbf1-f2127afaf5ab.png">
@@ -33,7 +33,7 @@ Using this architecture design pattern requires solving problems like the follow
 The supply chain management application solves these problems by implementing the patterns described below.
 
 ### Subdomain decomposition
-To answer the issue of system partitioning, the decision was made to use the Decompose by subdomain design pattern. This means defining services to corresponding Domain-Driven Design (DDD) subdomains. DDD refers to the application’s problem space, the business, as the domain (Microservices pattern: Decompose by subdomain). The supply chain management domain is complex and can be easily split into subdomains. See diagram  below:
+To answer the issue of system partitioning, the decision was made to use the Decompose by subdomain design pattern. This means defining services to corresponding Domain-Driven Design (DDD) subdomains. DDD refers to the application’s problem space, the business, as the domain (Microservices pattern: Decompose by subdomain). The supply chain management domain is complex and can be easily split into subdomains. See diagram below:
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/10623036/181138723-948a1d25-64df-4286-abac-a33792f2e625.png">
@@ -45,11 +45,11 @@ The benefits of this pattern are:
 * Ensures the cohesive yet independent nature of the services.
 
 The consequences of this pattern are:
-* Domain knowledge is required in order to identify  subdomains 
+* Domain knowledge is required in order to identify subdomains 
 * Managing the organizational structure of the development teams corresponding to their subdomains.
 
 ### Database per service
-To answer the issue of service independence, the decision was made to use the Database per service design pattern. This means each service can control access to the data it needs and its transactions only involve its database. The service's database can't be accessed directly by any other service and its data is only accessible via an API the service exposes (Microservices pattern: Database per service). See diagram  below:
+To answer the issue of service independence, the decision was made to use the Database per service design pattern. This means each service can control access to the data it needs and its transactions only involve its database. The service's database can't be accessed directly by any other service and its data is only accessible via an API the service exposes (Microservices pattern: Database per service). See diagram below:
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/10623036/181138083-38d61e1c-718c-4303-a8ed-1c5390df2ddc.png">
@@ -57,24 +57,24 @@ To answer the issue of service independence, the decision was made to use the Da
 
 The benefits of this pattern are:
 * Ensure that services are loosely coupled.
-* Each service can use the type of database it needs. (maximizes flexibility)
+* Each service can use the type of database it needs. (Maximizes flexibility)
 
 The consequences of this pattern are:
 * Implementing queries that join data that is now in multiple databases is challenging.
 * Database management is more complex.
-* Implementing transactions that span multiple services is much harder. (The next pattern address this concern)
+* Implementing transactions that span multiple services is much harder. (The next pattern addresses this concern)
 
 ### Saga pattern (Choreography-based)
-To answer the issue of data consistency and implementing transactions that span services, the decision was made to use the Saga design pattern. This means each business transaction that involves mulitple services is a saga. A saga is a sequence of local transactions. There are different types of sagas, this application uses choreography-based sagas meaning when one service updates data it publishes a message which triggers other services to perfom transactions (Microservices pattern: Sagas). See example below:
+To answer the issue of data consistency and implementing transactions that span services, the decision was made to use the Saga design pattern. This means each business transaction that involves multiple services is a saga. A saga is a sequence of local transactions. There are different types of sagas, this application uses choreography-based sagas meaning when one service updates data it publishes a message which triggers other services to perform transactions (Microservices pattern: Sagas). See example below:
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/10623036/181138089-bfb35c8f-24c4-4bf0-aced-162f422f2b97.png">
 </p>
 
-As meantioned the benefits of this pattern is that it enables an application to maintain data consistency across multiple services without using distributed transactions (Microservices pattern: Sagas). But, the consequences is that it increases the development complexity.
+As meantioned the benefits of this pattern is that it enables an application to maintain data consistency across multiple services without using distributed transactions (Microservices pattern: Sagas). But the consequences is that it increases the development complexity.
 
 #### Transactional outbox pattern
-In order to reliably and atomically update a services database and publish messages/events, the decision was made to use the transactional outbox design pattern. This means a service inserts messages into an "outbox" table during a local transaction. A seperate message relay process published the messages that are in the database to a message broker/bus (Microservices pattern: Transactional outbox). See example below:
+In order to reliably and atomically update a services database and publish messages/events, the decision was made to use the transactional outbox design pattern. This means a service inserts messages into an "outbox" table during a local transaction. A separate message relay process published the messages that are in the database to a message broker/bus (Microservices pattern: Transactional outbox). See example below:
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/10623036/181138104-a9cf264e-7f3a-47c0-abdb-949e9f20183c.png">
@@ -90,7 +90,7 @@ The consequences of this pattern are:
 
 ## Supply Chain Management Application Architecture
 The Supply Chain Management Application was implemented using each of the design patterns explained above. The application was decomposed into two web applications to cover the inventory and warehouse management sub domains of supply chain management.  
-These applications are Blazor Webassmbly web applications that are composed of the following components:
+These applications are Blazor Webassembly web applications that are composed of the following components:
 * A standalone frontend that is a Single Page (SPA) Progressive Web Application (PWA)
 * A backend web services that handles the app's database transactions and serves the frontend application to the browser
 * Each backend web service has it's own relational database. 
@@ -99,7 +99,7 @@ These applications are Blazor Webassmbly web applications that are composed of t
   <img src="https://user-images.githubusercontent.com/10623036/181141998-c5633d74-2bac-4cda-919a-eceb32dfa086.png">
 </p>
 
-The warehouse management application allows its users to create and manage warehouses and receive and ship items. When the users perform these transactions, the web service publishes messages to a table in it's database that serves as an outbox table. The message is then published to a message broker. The inventory management web service is subscibed to receive the messages published by the warehouse management system. The inventory service updates its inventory tables to reflect the current state of the warehouse. The users can use the inventory management application to view reports of the warehouse inventory.
+The warehouse management application allows its users to create and manage warehouses and receive and ship items. When the users perform these transactions, the web service publishes messages to a table in its database that serves as an outbox table. The message is then published to a message broker. The inventory management web service is subscribed to receive the messages published by the warehouse management system. The inventory service updates its inventory tables to reflect the current state of the warehouse. The users can use the inventory management application to view reports of the warehouse inventory.
 
 An Azure Service Bus was used as the message broker. (https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-messaging-overview) Also, both webservices use a .NET library called CAP to help handle the message bus communication. (https://cap.dotnetcore.xyz/)
 
