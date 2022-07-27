@@ -1,7 +1,7 @@
 # Supply Chain Management Application
 This application is a demo to highlight design patterns related to microservice architecture for a term project for SWE 6853 (Summer 2022). This repository contains two web applications:  
   1. A warehouse management application that allows its users to create and manage warehouses and receive and ship items. (https://warehouse-mgmt.azurewebsites.net/)
-  2. A inventory management application that allows its users to view inventory in the warehouses. (https://inventory-mgr.azurewebsites.net/)
+  2. An inventory management application that allows its users to view inventory in the warehouses. (https://inventory-mgr.azurewebsites.net/)
 
 Source code: https://github.com/jig1314/SupplyChain  
 
@@ -71,7 +71,7 @@ To answer the issue of data consistency and implementing transactions that span 
   <img src="https://user-images.githubusercontent.com/10623036/181138089-bfb35c8f-24c4-4bf0-aced-162f422f2b97.png">
 </p>
 
-As meantioned the benefits of this pattern is that it enables an application to maintain data consistency across multiple services without using distributed transactions (Microservices pattern: Sagas). But the consequences is that it increases the development complexity.
+As mentioned, the benefit of this pattern is that it enables an application to maintain data consistency across multiple services without using distributed transactions (Microservices pattern: Sagas). But the consequence is that it increases the development complexity.
 
 #### Transactional outbox pattern
 In order to reliably and atomically update a services database and publish messages/events, the decision was made to use the transactional outbox design pattern. This means a service inserts messages into an "outbox" table during a local transaction. A separate message relay process published the messages that are in the database to a message broker/bus (Microservices pattern: Transactional outbox). See example below:
@@ -90,10 +90,10 @@ The consequences of this pattern are:
 
 ## Supply Chain Management Application Architecture
 The Supply Chain Management Application was implemented using each of the design patterns explained above. The application was decomposed into two web applications to cover the inventory and warehouse management sub domains of supply chain management.  
-These applications are Blazor Webassembly web applications that are composed of the following components:
+These applications are Blazor WebAssembly web applications that are composed of the following components:
 * A standalone frontend that is a Single Page (SPA) Progressive Web Application (PWA)
 * A backend web services that handles the app's database transactions and serves the frontend application to the browser
-* Each backend web service has it's own relational database. 
+* Each backend web service has its own relational database. 
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/10623036/181141998-c5633d74-2bac-4cda-919a-eceb32dfa086.png">
