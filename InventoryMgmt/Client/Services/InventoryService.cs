@@ -29,6 +29,23 @@ namespace InventoryMgmt.Client.Services
             }
         }
 
+        public async Task<List<InventoryDistributionDto>> GetInventoryDistribution(int inventoryId)
+        {
+            try
+            {
+                var response = await httpClient.GetFromJsonAsync<List<InventoryDistributionDto>>($"api/inventory/{inventoryId}");
+
+                if (response == null)
+                    throw new Exception("Inventory was not found!");
+
+                return response;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<WarehouseDto> GetWarehouse(int warehouseId)
         {
             try

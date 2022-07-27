@@ -1,6 +1,8 @@
 ﻿@page "/warehouse/{warehouseId}"
 @using WarehouseMgmt.Client.Components.Modals
 
+<PageTitle>Items</PageTitle>
+
 @if (LoadingData)
 {
     <div style="display:flex; justify-content:center;">
@@ -9,6 +11,8 @@
 }
 else
 {
+    <PageTitle>@WarehouseViewModel.Name Items</PageTitle>
+
     <BSContainer>
         <BSRow>
             <BSCol>

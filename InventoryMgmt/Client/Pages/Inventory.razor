@@ -11,6 +11,8 @@ else
 {
     <BSContainer>
         <BSRow>
+            <PageTitle>@Warehouse.Name Inventory</PageTitle>
+
             <h1>@Warehouse.Name Inventory</h1>
             <hr/>
         
@@ -28,6 +30,7 @@ else
                             <BSTD>Part Number</BSTD>
                             <BSTD>Part Description</BSTD>
                             <BSTD>Quantity</BSTD>
+                            <BSTD>Options</BSTD>
                         </BSTR>
                     </BSTHead>
                     <BSTBody>
@@ -37,6 +40,9 @@ else
                                 <BSTD>@inventory.PartNumber</BSTD>
                                 <BSTD>@inventory.Description</BSTD>
                                 <BSTD>@inventory.Qty</BSTD>
+                                <BSTD>
+                                    <BSButton style="padding: unset;" IsLink="true" OnClick="(() => OpenInventoryModal(inventory.Id))">View Distribution</BSButton>
+                                </BSTD>
                             </BSTR>
                         }
                     </BSTBody>
@@ -55,3 +61,5 @@ else
         </BSRow>
     </BSContainer>
 }
+
+<InventoryMgmt.Client.Components.Modals.ViewInventoryModal @ref="ViewInventoryModal" />

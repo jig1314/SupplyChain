@@ -1,4 +1,5 @@
-﻿using InventoryMgmt.Client.Services;
+﻿using InventoryMgmt.Client.Components.Modals;
+using InventoryMgmt.Client.Services;
 using InventoryMgmt.Shared.DTOs;
 using Microsoft.AspNetCore.Components;
 
@@ -24,6 +25,8 @@ namespace InventoryMgmt.Client.Pages
         protected WarehouseDto Warehouse { get; set; } = new WarehouseDto();
 
         protected List<InventoryDto> InventoryDtos { get; set; } = new List<InventoryDto>();
+
+        protected ViewInventoryModal? ViewInventoryModal { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -62,6 +65,14 @@ namespace InventoryMgmt.Client.Pages
 
             NavigationManager.NavigateTo("/warehouses/");
 
+        }
+
+        protected void OpenInventoryModal(int inventoryId)
+        {
+            if (ViewInventoryModal == null)
+                return;
+
+            ViewInventoryModal.Show(inventoryId);
         }
     }
 }

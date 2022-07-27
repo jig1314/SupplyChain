@@ -7,5 +7,6 @@ namespace InventoryMgmt.Client.Services
         Task<List<WarehouseDto>> GetWarehouses();
         Task<List<InventoryDto>> GetInventory(int warehouseId);
         Task<WarehouseDto> GetWarehouse(int warehouseId);
+        Task<List<InventoryDistributionDto>> GetInventoryDistribution(int inventoryId);
     }
 }

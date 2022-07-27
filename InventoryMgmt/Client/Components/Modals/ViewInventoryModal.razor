@@ -1,0 +1,55 @@
+﻿@using BlazorStrap.Extensions.FluentValidation
+
+<BSModal Size="Size.Large"  @ref="Modal">
+    <Header>Inventory Distribution</Header>
+    <Content>
+        @if (LoadingData)
+        {
+            <div style="display:flex; justify-content:center;">
+                <BSSpinner/>
+            </div>
+        }
+        else
+        {
+            @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+            {
+                <BSAlert Color="BSColor.Danger" HasIcon="true">
+                    @ErrorMessage
+                </BSAlert>
+            }
+            @if(InventoryDistribution?.Count > 0)
+            {
+                <BSTable IsResponsive="true" IsStriped="true">
+                    <BSTHead>
+                        <BSTR>
+                            <BSTD>Storage Location</BSTD>
+                            <BSTD>Part Number</BSTD>
+                            <BSTD>Part Description</BSTD>
+                            <BSTD>Quantity</BSTD>
+                            <BSTD>Serial Number</BSTD>
+                        </BSTR>
+                    </BSTHead>
+                    <BSTBody>
+                        @foreach(var inventory in InventoryDistribution)
+                        {
+                            <BSTR>
+                                <BSTD>@inventory.StorageLocation</BSTD>
+                                <BSTD>@inventory.PartNumber</BSTD>
+                                <BSTD>@inventory.Description</BSTD>
+                                <BSTD>@inventory.Qty</BSTD>
+                                <BSTD>@inventory.SerialNumber</BSTD>
+                            </BSTR>
+                        }
+                    </BSTBody>
+                </BSTable>
+            }
+            else
+            {
+                <p style="margin-left: 15px;">No inventory found.</p>
+            }
+        }
+    </Content>
+    <Footer Context="modal">
+        <BSButton Color="BSColor.Secondary" @onclick="Hide">Cancel</BSButton>
+    </Footer>
+</BSModal>
