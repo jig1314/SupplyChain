@@ -1,6 +1,6 @@
 # Supply Chain Management Application
 This application is a demo to showcase design patterns related to microservice architecture for a term project for SWE 6853 (Summer 2022). This repository contains two web applications:  
-  1. A warehouse management application that allows its users to manage warehouse and receive and ship items. (https://warehouse-mgmt.azurewebsites.net/)
+  1. A warehouse management application that allows its users to create and manage warehouses and receive and ship items. (https://warehouse-mgmt.azurewebsites.net/)
   2. A inventory management application that allows its users to view inventory in the warehouses. (https://inventory-mgr.azurewebsites.net/)
 
 Source code: https://github.com/jig1314/SupplyChain  
@@ -89,10 +89,18 @@ The consequences of this pattern are:
   * Developers have to remember to publish the messages after database transactions
 
 ## Supply Chain Management Application Architecture
+The Supply Chain Management Application was implemented using each of the design patterns explained above. The application was decomposed into two web applications to cover the inventory and warehouse management sub domains of supply chain management.  
+These applications are Blazor Webassmbly web applications that are composed of the following components:
+* A standalone frontend that is a Single Page (SPA) Progressive Web Application (PWA)
+* A backend web services that handles the app's database transactions and serves the frontend application to the browser
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/10623036/181141998-c5633d74-2bac-4cda-919a-eceb32dfa086.png">
 </p>
+
+Each backend web service has it's own relational database.  
+The warehouse management application allows its users to create and manage warehouses and receive and ship items. When the users perform these transactions, the web service publishes messages to a table in it's database that serves as an outbox table. The message is then published to a message broker. The inventory management web service is subscibed to receive the messages published by the warehouse management system. The inventory service updates its inventory tables to reflect the current state of the warehouse. The users can use the inventory management application to view reports of the warehouse inventory.
+An Azure Service Bus was used as the message broker. (https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-messaging-overview) Also, both webservices use a .NET library called CAP to help handle the message bus communication. (https://cap.dotnetcore.xyz/)
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/10623036/181141999-2c7add2c-034f-42c8-8575-95bffc8a983d.png">
