@@ -30,13 +30,24 @@ Using this architecture design pattern requires solving problems like the follow
 The supply chain management application solves these problems by implementing the patterns described below.
 
 ### Subdomain decomposition
-To answer the question 
+To answer the issue of system partitioning, the decision was made to use the Decompose by subdomain design pattern. This means defining services to corresponding Domain-Driven Design (DDD) subdomains. DDD refers to the application’s problem space, the business, as the domain (Microservices pattern: Decompose by subdomain). The supply chain management domain is complex and can be easily split into subdomains. See diagram  below:
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/10623036/181138723-948a1d25-64df-4286-abac-a33792f2e625.png">
 </p>
 
+The benefits of this pattern are:
+* The architecture is as stable as the domain itself.
+* Development teams can be organized around delivering business value of the subdomain rather than technical features.
+* Ensures the cohesive yet independent nature of the services.
+
+The consequences of this pattern are:
+* Domain knowledge is required in order to identify  subdomains 
+* Managing the organizational structure of the development teams corresponding to their subdomains.
+
 ### Database per service
+
+
 <p align="center">
   <img src="https://user-images.githubusercontent.com/10623036/181138083-38d61e1c-718c-4303-a8ed-1c5390df2ddc.png">
 </p>
