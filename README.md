@@ -108,7 +108,9 @@ An Azure Service Bus was used as the message broker. (https://docs.microsoft.com
 </p>
 
 #### Example: Warehouse Management (publish message when warehouse is created)
-![Warehouse Management](https://user-images.githubusercontent.com/10623036/181150912-7a51e716-a17e-4c56-8d5d-bcb66792ce11.png)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/10623036/181152402-32f28eef-7b3f-418e-b5bc-d225b3a174e2.png">
+</p>
 
 #### Example: Inventory Management (updates database after receiving message that a new warehouse was created)
 <p align="center">
