@@ -3,6 +3,8 @@ This application is a demo to showcase design patterns related to microservice a
   1. A warehouse management application that allows its users to manage warehouse and receive and ship items. (https://warehouse-mgmt.azurewebsites.net/)
   2. A inventory management application that allows its users to view inventory in the warehouses. (https://inventory-mgr.azurewebsites.net/)
 
+Source code: https://github.com/jig1314/SupplyChain  
+
 See more information about the design patterns utilized to implement this application below.
 
 ## Microservice Architecture Design Patterns
@@ -63,14 +65,28 @@ The consequences of this pattern are:
 * Implementing transactions that span multiple services is much harder. (The next pattern address this concern)
 
 ### Saga pattern (Choreography-based)
+To answer the issue of data consistency and implementing transactions that span services, the decision was made to use the Saga design pattern. This means each business transaction that involves mulitple services is a saga. A saga is a sequence of local transactions. There are different types of sagas, this application uses choreography-based sagas meaning when one service updates data it publishes a message which triggers other services to perfom transactions (Microservices pattern: Sagas). See example below:
+
 <p align="center">
   <img src="https://user-images.githubusercontent.com/10623036/181138089-bfb35c8f-24c4-4bf0-aced-162f422f2b97.png">
 </p>
 
+As meantioned the benefits of this pattern is that it enables an application to maintain data consistency across multiple services without using distributed transactions (Microservices pattern: Sagas). But, the consequences is that it increases the development complexity.
+
 #### Transactional outbox pattern
+In order to reliably and atomically update a services database and publish messages/events, the decision was made to use the transactional outbox design pattern. This means a service inserts messages into an "outbox" table during a local transaction. A seperate message relay process published the messages that are in the database to a message broker/bus (Microservices pattern: Transactional outbox). See example below:
+
 <p align="center">
   <img src="https://user-images.githubusercontent.com/10623036/181138104-a9cf264e-7f3a-47c0-abdb-949e9f20183c.png">
 </p>
+
+The benefits of this pattern are:
+* Messages are guaranteed to be sent if and only if the database transaction commits
+* Messages are sent to the message broker in the order they were sent by the application (Microservices pattern: Transactional outbox)
+
+The consequences of this pattern are:
+* Increase in development complexity
+  * Developers have to remember to publish the messages after database transactions
 
 ## Supply Chain Management Application Architecture
 
