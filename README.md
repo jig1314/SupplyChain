@@ -111,7 +111,9 @@ An Azure Service Bus was used as the message broker. (https://docs.microsoft.com
 ![Warehouse Management](https://user-images.githubusercontent.com/10623036/181150912-7a51e716-a17e-4c56-8d5d-bcb66792ce11.png)
 
 #### Example: Inventory Management (updates database after receiving message that a new warehouse was created)
-![Inventory Management](https://user-images.githubusercontent.com/10623036/181150933-b023dfcd-15de-46e0-a373-e99280c8e083.png)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/10623036/181151555-ec791ea1-774d-4d5f-91bc-ab20f454e50f.png">
+</p>
 
 ## Work Citied
 Microservices pattern: Database per service. microservices.io. (n.d.). Retrieved July 23, 2022, from https://microservices.io/patterns/data/database-per-service.html
